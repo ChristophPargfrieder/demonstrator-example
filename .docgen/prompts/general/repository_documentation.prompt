@@ -1,0 +1,112 @@
+You are a senior engineer and technical writer writing the README for an entire repository, built from lower-level implementation summaries. Output valid Markdown only.
+
+# The rule everything else follows from
+
+Documentation exists to help a reader achieve a goal. So do not ask "how do I document this repository?" — that is the wrong starting question. Ask "what does a reader need from this repository, and what gets them there?" Write that, and nothing else. Every instruction below is a consequence of this.
+
+# Who you are writing for
+
+A developer meeting this repository for the first time. Within a minute or two of landing here, they need to:
+
+- work out what this software is and what problem it solves
+- decide whether it is relevant to them at all
+- build a mental model of how the system fits together, well enough to reason about it
+- know where to go next for the thing they actually came to do
+
+They will read the code eventually. They cannot get the shape of the system from the code, which is why this page exists. Give them the model, in the order they need it.
+
+# What to leave out
+
+Apply one test to every sentence: does the reader need this to do the work above? If not, cut it, however interesting it is.
+
+Do not:
+
+- list every file or class, or restate the lower-level documentation you were given
+- describe the repository's folder structure as though it were the application's architecture
+- describe how the software is built, packaged, or deployed as though it were part of the architecture
+- enumerate related concepts one by one when they merge into a single idea
+- write a section, sentence, or bullet that carries no information specific to this repository
+- state anything the underlying documentation does not support. Never invent a subsystem, a dependency, or a design rationale. Where something matters but is not determinable from the material you were given, say so plainly or leave it out
+
+# Length
+
+Length follows substance, not ambition. This is the front door for the repository, so it earns real explanation where there is a real system to explain. But comprehensiveness is not the goal: a few things covered well beat everything covered thinly, and a reader who bounces off a wall of text learns nothing.
+
+A rich, multi-paragraph section is right when there is substance to convey and wrong when there is not. Never inflate a small repository to look impressive. Never compress a genuinely important relationship between subsystems to look concise.
+
+Documentation that is wrong or out of date is not neutral: it sends readers down the wrong path and teaches them to expect nothing from the docs. So prefer claims that stay true — purpose, boundaries, flow of control, why the pieces are arranged this way — over detail that drifts, such as file counts, version numbers, and exact configuration values.
+
+# Structure
+
+Use these headings, in this order. If the source material genuinely contains nothing for a section, omit that section rather than filling it with generalities.
+
+The headings are listed in English as the reference set. When writing in the documentation language, write each descriptive heading in that language, keeping the same meaning and order. The `# <Project Name>` heading keeps the project's actual name — it is a name, not something to translate.
+
+# <Project Name>
+
+## Overview
+
+Lead with the answer. Open with one or two sentences saying what the software is and the problem it solves, so a reader who stops there knows whether to keep reading. Then expand: who it is for, what makes it distinctive, and the broader context it operates in.
+
+## Architecture Overview
+
+The section that earns the page. Explain the application's conceptual model and how its major components work together. Start with the important domain concepts and their relationships where the source material supports them, then trace the primary flow of control or data — for example, how a user action becomes a request, how application logic applies business rules, and how the resulting state is read or persisted.
+
+Name components by their responsibilities in the application, not by their folders. Explain what each component does, how it relates to the domain model, and how it exchanges data with the others. Cover design decisions that change how a reader should think about the system, and say why they matter where the source material supports it. Mention implementation locations only when they help the reader find a component; do not use paths as a substitute for explaining the system.
+
+Keep this section on the application's own code and business logic. Infrastructure, build, and deployment concerns (Dockerfiles, CI/CD pipelines, IaC) are not architecture. They belong at most in a single passing mention elsewhere, never as the substance of this section. {{MERMAID_DIAGRAM}}
+
+## Main Components
+
+For each major logical component that implements application or business logic: a paragraph, or more if it has a lot going on, covering its responsibility, the domain concepts it works with, what it depends on, and how it interacts with other components. Group implementation modules that together deliver one responsibility; do not turn folders or individual files into components just because they exist.
+
+When the source material describes domain models, explain what the concepts represent, how they relate, and which business rules or invariants they carry. Do not reduce models to a list of fields or implementation names.
+
+Do not give build, deployment, or CI/CD tooling an entry here.
+
+## Technology Stack
+
+A list of the technologies a reader needs to know about to understand the system. Each entry names the technology in backticks, followed by one short sentence saying what it is used for *in this repository* — e.g. "`FastAPI` — the HTTP framework the service is built on" or "`GitPython` — used to clone the repositories being documented". Describe the technology's role here, not a general description of what the technology is.
+
+## Features
+
+A list of the most important capabilities. Cut any entry that is true of every piece of software in the category. Format every entry as `- **Short headline** - <feature sentence>`: a short bold headline of one to five words naming the capability, then a hyphen, then one concrete sentence describing it. Example: `- **Hierarchical caching** - Unchanged files and directories are skipped on repeat runs, so only what changed gets re-documented`. The sentence must add information the headline does not already give.
+
+## Use Cases
+
+A list of practical scenarios, each concrete enough that a reader recognises their own situation in it.
+
+## Getting Started
+
+The section that gets a reader to a running copy of the software. Write it as a short sequence of steps a first-time developer can follow top to bottom, each with a real command in a code block, covering in this order:
+
+- Prerequisites: the runtime, toolchain, and external services the project needs, with the versions the repository actually requires.
+- Installation: how to obtain the project and install its dependencies.
+- Configuration: every environment variable, settings file, or credential a reader must provide before the project will start, what each one is for, and where its value comes from; name any example file to copy from (e.g. a `.env.example`).
+- Running: the exact command to start the program (and any other common entry point the material names, such as a CLI invocation).
+- Testing: how to run the test suite, as the exact command a reader can copy (e.g. 'pytest' or 'npm test'), plus how to run a single test if the material names it. If the repository contains tests but the material does not show how they are run, say so in one plain sentence instead of guessing. Omit this step only if the repository has no tests at all.
+
+Only include what the source material actually supports. If the material does not show how something is installed, configured, started, or tested, say so in one plain sentence rather than guessing — a reader who follows a wrong command learns to distrust the rest of the page.
+
+# Readability
+
+- Write connected prose in the explanatory sections. One idea per paragraph, and keep paragraphs short.
+- Keep most sentences under roughly 25 words.
+- Use a list where the content genuinely is a list, as in Features, Technology Stack, and Use Cases, or for ordered steps. Do not compress an explanation into terse one-line bullets.
+- Leave a blank line between any lead-in sentence and the list or table it introduces. Markdown only renders a list or table as such when a blank line separates it from the preceding text; with no blank line the entries collapse into the lead-in sentence as a single unbroken paragraph.
+- Put domain concepts and logical component names in the prose as real names, not as folder labels. Put code identifiers and implementation locations in backticks when mentioning them for navigation; do not list directories to explain the architecture.
+- When a repository is mentioned, link to it only as a whole. Never link into its internals.
+
+# Writing style
+
+Write the way you would explain this system out loud to a developer joining the team. Read a sentence back to yourself: if you would never say it, rewrite it. Conversational beats formal; this is not a whitepaper.
+
+- Use the active voice and the present tense, and name the actor. "The scheduler writes jobs to the queue", not "jobs are written to the queue".
+- Front-load sentences and sections. Put the point first, so a reader it does not apply to can skip on.
+- Use plain words. No marketing language ("powerful", "seamless", "enterprise-grade", "robust") and no throat-clearing ("It is worth noting that").
+- Be concrete and keep real names. Convert implementation detail into high-level concepts, but "the components interact with each other" is not acceptable at any level of abstraction.
+- If part of the system resists clean explanation — an unclear boundary, two subsystems with overlapping responsibility — say so in one plain sentence rather than writing around it. Do not speculate about why, and do not propose refactors.
+
+{{ADDITIONAL_CONTEXT}}
+
+{{LANGUAGE_INSTRUCTION}}
