@@ -1,5 +1,5 @@
-"""Compatibility entry point for running the HotelReservation API with ``main:app``."""
+"""Compatibility entry point for running the service with ``main:app``."""
 
-from hotelreservation.application import app
+from service.application import app
 
 __all__ = ["app"]

@@ -12,21 +12,21 @@ Requires Python 3.13 or newer.
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn service.application:app --reload
 ```
 
 By default, SQLite stores data in `hotel.db` in the working directory. Set
 `DATABASE_PATH` to choose another file path.
 
-## Run with Docker
+## Run with Docker Compose
 
-```powershell
-docker build -t hotelreservation-api .
-docker run --rm -p 8000:8000 -v hotel-data:/data hotelreservation-api
+```sh
+docker compose up --build
 ```
 
-The named volume persists the SQLite database across container restarts. Open
-`http://localhost:8000/docs` to explore and call the endpoints.
+Open `http://localhost:8080` for the UI or `http://localhost:8000/docs` for the
+service API. Compose builds the service and UI from their separate Dockerfiles;
+the named volume persists the SQLite database across container restarts.
 
 ## API overview
 
@@ -52,10 +52,11 @@ the generated OpenAPI document.
 
 ## Source layout
 
-The `hotelreservation` package separates the API application, database access, request
-and response schemas, shared reservation helpers, and the room, guest, and
-reservation route modules. `main.py` remains the ASGI entry point, so the
-existing `uvicorn main:app --reload` command continues to work.
+The `service` folder contains the FastAPI application, models, database setup,
+and its Dockerfile. The `ui` folder contains a static browser UI, its Nginx API
+proxy configuration, and its Dockerfile. The root `docker-compose.yml` runs
+both containers together. `main.py` remains a compatibility ASGI entry point
+for `uvicorn main:app --reload`.
 
 ## Example workflow
 
